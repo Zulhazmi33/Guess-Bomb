@@ -8,3 +8,4 @@ Generate random number that will be guessed by user. If guessed wrong, the bomb 
 5) A screen will display hint whether the guessed number is higher or lower than the bomb generated
 6) If guess right, won
 7) If guess wrong, the bomb explode
+8) Click "Randomize" to start it all over again
