@@ -1,0 +1,243 @@
+<html>
+<head>
+        <script>
+            var buttonLipLap = ["a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12",
+                                            "b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","b11","b12",
+                                            "c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","c11","c12",
+                                            "d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12",
+                                            "e1","e2","e3","e4","e5","e6","e7","e8","e9","e10","e11","e12",
+                                            "f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12"];
+
+            var temporary = ["blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue",
+                                 "blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue",
+                                 "blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue",
+                                 "blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue",
+                                 "blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue",
+                                 "blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue","blue"];
+
+            var gameEvent = "Rest";
+            var randomBomb = 0;
+            var bombTick;
+
+            {
+                    function lipLap(){
+                            if(gameEvent !== "Maintainance")
+                            {
+                                    gameStart();
+                                    resetColour();
+                                    resetNumber();
+                                    delay();
+                                    blackScreen();
+
+                            }
+                    }
+
+
+
+
+                    function randomizer(){
+                            var random;
+                        do
+                          random = parseInt(Math.random()*100);
+                        while(random>73 || random<1);
+
+                        for(var i=1;i<73;i++)
+                          if(random === i)
+                            document.getElementById(buttonLipLap[i-1]).style.backgroundColor = "yellow";
+                    }
+                    function resetColour(){
+                            for(var i=1;i<73;i++)
+                            document.getElementById(buttonLipLap[i-1]).style.backgroundColor = "white";
+                    }
+
+
+
+
+
+                    function gameStart(){
+                            bombTick = 7;
+                            document.getElementById("trial").innerHTML = "-";  
+                            gameEvent = "Maintainance";
+                            setTimeout(()=> {gameEvent = "Start";},3500);
+
+                        do
+                        {
+                            randomBomb = parseInt(Math.random()*100);
+                        }while(randomBomb>73 || randomBomb <1)
+                    }
+                    function resetNumber(){
+                            for(var i=1;i<73;i++)
+                            document.getElementById(buttonLipLap[i-1]).style.color = "transparent";    	
+                        setTimeout(()=> 
+                        {
+                            for(var i=1;i<73;i++)
+                                    document.getElementById(buttonLipLap[i-1]).style.color = "black";    	
+                        },3000);
+                    }
+                    function delay(){
+                            for(var i=0;i<3000;i+=50)
+                        {
+                            setTimeout(()=> {randomizer()},i);
+                            setTimeout(()=> {resetColour()},i+100);
+                        } 
+                    }
+                    function blackScreen(){
+                            document.getElementById("blackScreen").innerHTML = "- - - - - - - -";
+                            setTimeout(()=> 
+                        {
+                            document.getElementById("blackScreen").innerHTML = "Guess where the bomb hiding";
+                            document.getElementById("trial").innerHTML = bombTick;    	
+                        },3100);
+                    }
+
+
+
+
+
+                    function bomb(buttonNumber){
+                            if(gameEvent == "Start" && bombTick != 0)
+                            {
+                                    if(buttonNumber < randomBomb)
+                                            document.getElementById("blackScreen").innerHTML = "The bomb's number is bigger"; 
+                                    else if(buttonNumber > randomBomb)
+                                            document.getElementById("blackScreen").innerHTML = "The bomb's number is smaller"; 
+                                    else
+                                    {
+                                            document.getElementById("blackScreen").innerHTML = "Ya betul!!";	
+                                            gameEvent="Rest";
+                                            setTimeout(()=>{document.getElementById("blackScreen").innerHTML="Click 'Randomize' to start again";},2000);
+                                    }
+
+                                    bombTimer(buttonNumber);
+                            }	
+                    }
+                    function bombTimer(buttonNumber){
+                            if(buttonNumber<randomBomb || buttonNumber>randomBomb)
+                            {
+                                    bombTick--;
+                                    document.getElementById("trial").innerHTML = bombTick;
+                            }
+
+                            if(bombTick === 0)
+                            {	
+                                    document.getElementById("blackScreen").innerHTML = "The bomb EXPLODE"; 
+                                    gameEvent="Rest";
+
+                                    for(var i=0;i<72;i++)
+                                {
+                                    setTimeout(()=> {
+                                                do
+                                                    {
+                                                            random = parseInt(Math.random()*100);
+                                                    }while(random>71 || random<0 || temporary[random] === "red");
+
+                                                    temporary[random] = "red";
+                                                    document.getElementById(buttonLipLap[random]).style.backgroundColor = "red";
+                                                    document.getElementById(buttonLipLap[random]).style.color = "red";
+                                                    },(i*25));
+                                    }
+                                    setTimeout(()=> {document.getElementById("blackScreen").innerHTML = "Game Over";},2000);
+                                    setTimeout(()=> {document.getElementById("blackScreen").innerHTML = "Click 'Randomize' to start again";},4000);
+                                for(var i=0;i<72;i++)
+                                    temporary[i] = "blue"; 	 
+                            }
+                    }
+
+            }
+  
+        </script>
+	<style>
+	    body{background-color: #653780}
+            .border
+            {
+                    position: relative;
+                    left: 200px;
+                    width: 1200px;
+                    height: 600px;
+                    border: 5px solid green;
+            }
+            .border button
+            {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 0px;
+                    border: 1px black;
+                    cursor: pointer;
+                    float: left;
+            }
+            .border button:hover {background-color: lightblue !important} 
+            .manipulateBomb button
+            {
+                    height: 90px;
+                    border-radius: 0px;
+                    border: 1px black;
+                    float: left;
+                    color: white;
+                    border: 7px solid green;
+                    font-size: 20px;
+                    font-weight: bold;
+                    color: black;
+            }
+            .manipulateBomb button:hover {background-color: yellow !important;}
+            #blackScreen {width: 710px;background-color: black !important; color: white; margin-left: 200px}
+            #trial 		 {width: 100px; background-color: indianred !important;} 
+            #submission  {width: 400px; background-color: blue; cursor: pointer;} 
+
+	</style>
+	<script type="text/javascript" src="guessBomb.js"></script>
+</head>
+<body id="guessBomb">
+	<div class="select">
+		<a style="top: 140px;" href="calculator.html" id="linkCalculator"> </a>
+    	<a style="top: 240px;" href="mainMenu.html" id="linkMenu"> </a>
+    	<a style="top: 340px;" href="whackMole.html" id="linkWhack"> </a>
+    	<a style="top: 440px;" href="#" id="contact"><b> </b></a>  
+    </div>
+
+	<div class="border">
+		<Button id="a1" onclick="bomb(1)">1</Button>   <Button id="a2" onclick="bomb(2)">2</Button>
+		<Button id="a3" onclick="bomb(3)">3</Button>   <Button id="a4" onclick="bomb(4)">4</Button>
+		<Button id="a5" onclick="bomb(5)">5</Button>   <Button id="a6" onclick="bomb(6)">6</Button>
+		<Button id="a7" onclick="bomb(7)">7</Button>   <Button id="a8" onclick="bomb(8)">8</Button>
+		<Button id="a9" onclick="bomb(9)">9</Button>   <Button id="a10"onclick="bomb(10)">10</Button>
+		<Button id="a11"onclick="bomb(11)">11</Button> <Button id="a12"onclick="bomb(12)">12</Button><br>
+		<Button id="b1" onclick="bomb(13)">13</Button> <Button id="b2" onclick="bomb(14)">14</Button>
+		<Button id="b3" onclick="bomb(15)">15</Button> <Button id="b4" onclick="bomb(16)">16</Button>
+		<Button id="b5" onclick="bomb(17)">17</Button> <Button id="b6" onclick="bomb(18)">18</Button>
+		<Button id="b7" onclick="bomb(19)">19</Button> <Button id="b8" onclick="bomb(20)">20</Button>
+		<Button id="b9" onclick="bomb(21)">21</Button> <Button id="b10"onclick="bomb(22)">22</Button>
+		<Button id="b11"onclick="bomb(23)">23</Button> <Button id="b12"onclick="bomb(24)">24</Button><br>
+		<Button id="c1" onclick="bomb(25)">25</Button> <Button id="c2" onclick="bomb(26)">26</Button>
+		<Button id="c3" onclick="bomb(27)">27</Button> <Button id="c4" onclick="bomb(28)">28</Button>
+		<Button id="c5" onclick="bomb(29)">29</Button> <Button id="c6" onclick="bomb(30)">30</Button>
+		<Button id="c7" onclick="bomb(31)">31</Button> <Button id="c8" onclick="bomb(32)">32</Button>
+		<Button id="c9" onclick="bomb(33)">33</Button> <Button id="c10"onclick="bomb(34)">34</Button>
+		<Button id="c11"onclick="bomb(35)">35</Button> <Button id="c12"onclick="bomb(36)">36</Button><br>
+		<Button id="d1" onclick="bomb(37)">37</Button> <Button id="d2" onclick="bomb(38)">38</Button>
+		<Button id="d3" onclick="bomb(39)">39</Button> <Button id="d4" onclick="bomb(40)">40</Button>
+		<Button id="d5" onclick="bomb(41)">41</Button> <Button id="d6" onclick="bomb(42)">42</Button>
+		<Button id="d7" onclick="bomb(43)">43</Button> <Button id="d8" onclick="bomb(44)">44</Button>
+		<Button id="d9" onclick="bomb(45)">45</Button> <Button id="d10"onclick="bomb(46)">46</Button>
+		<Button id="d11"onclick="bomb(47)">47</Button> <Button id="d12"onclick="bomb(48)">48</Button><br>
+		<Button id="e1" onclick="bomb(49)">49</Button> <Button id="e2" onclick="bomb(50)">50</Button>
+		<Button id="e3" onclick="bomb(51)">51</Button> <Button id="e4" onclick="bomb(52)">52</Button>
+		<Button id="e5" onclick="bomb(53)">53</Button> <Button id="e6" onclick="bomb(54)">54</Button>
+		<Button id="e7" onclick="bomb(55)">55</Button> <Button id="e8" onclick="bomb(56)">56</Button>
+		<Button id="e9" onclick="bomb(57)">57</Button> <Button id="e10"onclick="bomb(58)">58</Button>
+		<Button id="e11"onclick="bomb(59)">59</Button> <Button id="e12"onclick="bomb(60)">60</Button><br>
+		<Button id="f1" onclick="bomb(61)">61</Button> <Button id="f2" onclick="bomb(62)">62</Button>
+		<Button id="f3" onclick="bomb(63)">63</Button> <Button id="f4" onclick="bomb(64)">64</Button>
+		<Button id="f5" onclick="bomb(65)">65</Button> <Button id="f6" onclick="bomb(66)">66</Button>
+		<Button id="f7" onclick="bomb(67)">67</Button> <Button id="f8" onclick="bomb(68)">68</Button>
+		<Button id="f9" onclick="bomb(69)">69</Button> <Button id="f10"onclick="bomb(70)">70</Button>
+		<Button id="f11"onclick="bomb(71)">71</Button> <Button id="f12"onclick="bomb(72)">72</Button><br>
+	</div>
+	<div class="manipulateBomb">
+		<Button id="blackScreen"> Click "Randomize" to start </Button>
+		<Button id="trial"> - </Button>
+		<Button id="submission" onclick="lipLap()" > Randomize </Button>
+	</div>
+
+	
+</body>
+</html>
